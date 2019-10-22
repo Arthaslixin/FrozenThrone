@@ -1,0 +1,70 @@
+version: 1
+
+loggers:
+  root:
+    level: DEBUG
+    handlers: [console]
+  tornado:
+    level: DEBUG
+    handlers: [fileHandler_info]
+    propagate: no
+  tornado.access:
+    level: WARNING
+    handlers: [fileHandler_warning, fileHandler_error]
+    propagate: no
+  main:
+    level: INFO
+    handlers: [fileHandler_info]
+    propagate: no
+
+
+formatters:
+  fmt:
+    format: '%(asctime)s %(levelname)s [%(module)s:%(funcName)s:%(lineno)d] %(message)s'
+  simple:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  timedRotating:
+    format: '%(asctime)s %(name)-12s %(levelname)-8s - %(message)s'
+
+
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: fmt
+  access:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: DEBUG
+    formatter: simple
+    filename: 'logs/access.log'
+    when: 'midnight'
+    interval: 1
+    backupCount: 180
+  fileHandler_info:
+    class: component.log.ErrorAlarmHandler
+    level: INFO
+    formatter: fmt
+    filename: 'logs/procedure_info.log'
+    maxBytes: 1073741824
+    delay: True
+    backupCount: 10
+    encoding: 'utf8'
+  fileHandler_warning:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: WARNING
+    formatter: fmt
+    filename: 'logs/procedure_warning.log'
+    when: 'midnight'
+    interval: 1
+    backupCount: 180
+    encoding: 'utf8'
+  fileHandler_error:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: ERROR
+    formatter: fmt
+    filename: 'logs/procedure_error.log'
+    when: 'midnight'
+    interval: 1
+    backupCount: 180
+    encoding: 'utf8'
