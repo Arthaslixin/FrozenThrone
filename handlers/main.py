@@ -5,7 +5,7 @@ import tornado.web
 import importlib
 from handlers.base import BaseHandler
 import os
-
+import time
 
 class MainHandler(tornado.web.RequestHandler):
     """
@@ -28,7 +28,9 @@ class MainHandler(tornado.web.RequestHandler):
         # 截取uri 以便对应所访问的接口
         url_group = self.request.uri.split("/")
         if len(url_group) < 3:
-            return "Rua!"
+            start = 1587484800
+            delta = int((time.time() - start) // 86400 + 1)
+            return f"爱你~ 我们在一起{delta}天啦"
         handler_name = url_group[1].lower()
         interface_name = url_group[2].lower()
         if interface_name.find("?") != -1:
@@ -42,9 +44,9 @@ class MainHandler(tornado.web.RequestHandler):
         parse_json_res = handler.parse_json()
         if parse_json_res is not True:
             return parse_json_res
-        if not hasattr(handler, "json"):
-            return "json都没有你来请求啥"
-        logger.info(f"request {handler_name}/{interface_name}, params:{handler.json}")
+        # if not hasattr(handler, "json"):
+        #     return "json都没有你来请求啥"
+        # logger.info(f"request {handler_name}/{interface_name}, params:{handler.json}")
 
         res = await getattr(handler, interface_name)()
 
@@ -94,6 +96,8 @@ def find_handler():
                 else:
                     continue
         except Exception:
+            import traceback
+            print(traceback.format_exc())
             pass
     url_dict = BaseHandler.get_sub_cls()
     result = {}

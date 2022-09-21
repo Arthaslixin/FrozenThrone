@@ -41,14 +41,15 @@ handlers:
     when: 'midnight'
     interval: 1
     backupCount: 180
+    encoding: 'utf8'
   fileHandler_info:
-    class: component.log.ErrorAlarmHandler
+    class: logging.handlers.TimedRotatingFileHandler
     level: INFO
     formatter: fmt
     filename: 'logs/procedure_info.log'
-    maxBytes: 1073741824
-    delay: True
-    backupCount: 10
+    when: 'midnight'
+    interval: 1
+    backupCount: 180
     encoding: 'utf8'
   fileHandler_warning:
     class: logging.handlers.TimedRotatingFileHandler

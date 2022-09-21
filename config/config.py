@@ -1,6 +1,7 @@
 # coding=utf8
 # @author: Arthas
 
+SAVE_FILE_PATH = "./static/save.json"
 
 class StatusCode:
     """
